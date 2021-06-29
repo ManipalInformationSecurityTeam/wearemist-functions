@@ -1,0 +1,74 @@
+import mongoose from "mongoose";
+
+const AlumniSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      trim: true,
+      required: [true, "Please add a name"],
+    },
+    photo: {
+      type: String,
+      default:
+        "https://icon-library.com/images/no-user-image-icon/no-user-image-icon-27.jpg",
+    },
+    position: {
+      type: String,
+      required: [true, "Please add a position"],
+    },
+    year: {
+      type: String,
+      required: [true, "Board year is required"],
+    },
+    whereabouts: {
+      type: String,
+      default: "Missing",
+    },
+    social: {
+      linkedin: {
+        type: String,
+        trim: true,
+      },
+      webpage: {
+        type: String,
+        trim: true,
+      },
+      email: {
+        type: String,
+        trim: true,
+      },
+      github: {
+        type: String,
+        trim: true,
+      },
+      blogger: {
+        type: String,
+        trim: true,
+      },
+      medium: {
+        type: String,
+        trim: true,
+      },
+      twitter: {
+        type: String,
+        trim: true,
+      },
+      facebook: {
+        type: String,
+        trim: true,
+      },
+      instagram: {
+        type: String,
+        trim: true,
+      },
+      youtube: {
+        type: String,
+        trim: true,
+      },
+    },
+  },
+  { collection: "alumnis" }
+);
+
+module.exports =
+  mongoose.models.Alumni || mongoose.model("Alumni", AlumniSchema);
