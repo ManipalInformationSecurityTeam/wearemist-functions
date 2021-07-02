@@ -20,6 +20,14 @@ export default async function handler(req, res) {
       console.log(error);
       res.status(500).json({ success: false });
     }
+  } else if(method === "GET" && headers.client_token === process.env.CLIENT_TOKEN) {
+    try {
+      const subscribers = await Newsletter.find({});
+      res.status(200).send({ success: true, data: subscribers });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ success: false });
+    }
   } else {
     res.status(500).json({ success: false });
   }
