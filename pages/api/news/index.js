@@ -1,6 +1,7 @@
 import dbConnect from "../../../utils/dbConnect";
 import News from "../../../models/News";
 import Writer from "../../../models/Writer";
+import Subscriber from "../../../models/Newsletter";
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -18,6 +19,13 @@ export default async function handler(req, res) {
       else if (page === "paths") {
         const paths = await News.find({}, "_id");
         res.status(200).json({ success: true, data: paths });
+      }
+      // if stats are required
+      else if (page === "stats") {
+        const newsArticles = await News.find({});
+        const writers = await Writer.find({});
+        const subscribers = await Subscriber.find({});
+        res.status(200).json({ success: true, newsArticles: newsArticles.length, writers: writers.length, subscribers: subscribers.length });
       }
       // If page number is provided
       else if (
