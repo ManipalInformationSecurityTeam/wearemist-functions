@@ -71,6 +71,7 @@ export default async function handler(req, res) {
         .sort("-date")
         .limit(6)
         .skip(6 * parseInt(query.page));
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.status(200).json({ success: true, data: events });
     } else {
         res.status(500).json({ success: false });
