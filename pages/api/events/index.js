@@ -68,7 +68,7 @@ export default async function handler(req, res) {
             res.status(500).json({ success: false });
         }
         const events = await Event.find(eventQuery)
-        .sort("-date")
+        .sort("-endDate")
         .limit(6)
         .skip(6 * parseInt(query.page));
         res.setHeader("Access-Control-Allow-Origin", "*");
