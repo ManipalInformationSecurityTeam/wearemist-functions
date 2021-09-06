@@ -37,48 +37,53 @@ export default async function handler(req, res) {
         events.save();
         res.status(200).json({ success: true, msg: "Event added" });
     } else if (method === "GET") {
-        // query for past events
-        let eventQuery = {};
-        if (query.path === "past") {
-            eventQuery = {
-                startDate: {
-                    $lt: new Date()
+        try {
+            // query for past events
+            let eventQuery = {};
+            if (query.path === "past") {
+                eventQuery = {
+                    startDate: {
+                        $lt: new Date()
+                    }
                 }
-            }
-        } 
-        // query for upcoming events
-        else if (query.path === "upcoming") {
-            eventQuery = {
-                endDate: {
-                    $gt: new Date()
+            } 
+            // query for upcoming events
+            else if (query.path === "upcoming") {
+                eventQuery = {
+                    endDate: {
+                        $gt: new Date()
+                    }
                 }
-            }
-        } 
-        // query for current events
-        else if (query.path === "current") {
-            eventQuery = {
-                startDate: {
-                    $lte: new Date()
-                },
-                endDate: {
-                    $gte: new Date()
+            } 
+            // query for current events
+            else if (query.path === "current") {
+                eventQuery = {
+                    startDate: {
+                        $lte: new Date()
+                    },
+                    endDate: {
+                        $gte: new Date()
+                    }
                 }
+            } else {
+                res.status(500).json({ success: false });
             }
-        } else {
+            const events = await Event.find(eventQuery)
+            .sort("-endDate")
+            .limit(6)
+            .skip(6 * parseInt(query.page));
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.setHeader('Access-Control-Allow-Credentials', true);
+            res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+            res.setHeader(
+              'Access-Control-Allow-Headers',
+              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+            );
+            res.status(200).json({ success: true, data: events });
+        } catch (error) {
+            console.log(error);
             res.status(500).json({ success: false });
         }
-        const events = await Event.find(eventQuery)
-        .sort("-endDate")
-        .limit(6)
-        .skip(6 * parseInt(query.page));
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader('Access-Control-Allow-Credentials', true);
-        res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-        res.setHeader(
-          'Access-Control-Allow-Headers',
-          'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-        );
-        res.status(200).json({ success: true, data: events });
     } else {
         res.status(500).json({ success: false });
     }   
