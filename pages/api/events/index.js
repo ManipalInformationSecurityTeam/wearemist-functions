@@ -68,6 +68,8 @@ export default async function handler(req, res) {
             } else {
                 res.status(500).json({ success: false });
             }
+            const eventsData = await Event.find(eventQuery);
+            const totalEvents = eventsData.length;
             const events = await Event.find(eventQuery)
             .sort("-endDate")
             .limit(6)
@@ -79,7 +81,7 @@ export default async function handler(req, res) {
               'Access-Control-Allow-Headers',
               'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
             );
-            res.status(200).json({ success: true, data: events });
+            res.status(200).json({ success: true, data: events, length: totalEvents });
         } catch (error) {
             console.log(error);
             res.status(500).json({ success: false });
