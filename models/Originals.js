@@ -28,6 +28,9 @@ const OriginalsSchema = new mongoose.Schema(
     link: {
         type: String
     },
+    sortOrder: {
+        type: Number
+    } 
   },
   { collection: "originals" }
 );
